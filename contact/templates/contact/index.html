@@ -29,7 +29,7 @@
                     {% for contact in contacts %}
                         <tr class="table-cel">
                             <td class="table-cel">
-                                <a href="http://" class="table-link">
+                                <a href="{% url 'contact:contact' contact.id %}" class="table-link">
                                     {{contact.id}}
                                 </a>
                             </td>
