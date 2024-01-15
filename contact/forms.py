@@ -55,7 +55,7 @@ class ContactForm(forms.ModelForm):
 
         # cria os campos na view de acordo com o model
         fields = (
-            'first_name', 'last_name', 'phone'
+            'first_name', 'last_name', 'phone', 'email', 'description', 'category'
         )
 
         # troca o type do input; passwordInput
