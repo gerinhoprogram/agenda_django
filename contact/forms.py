@@ -2,6 +2,13 @@ from django import forms
 from django.core.exceptions import ValidationError
 from . import models
 
+# criar usuarios
+from django.contrib.auth.forms import UserCreationForm
+
+
+class RegisterForm(UserCreationForm):
+     ...
+
 # class altera os campos do formulario
 class ContactForm(forms.ModelForm):
 
@@ -40,10 +47,20 @@ class ContactForm(forms.ModelForm):
         help_text='Texto de ajuda para seu usuário',
     )
 
+
+    # mudando o input da imagem
+    picture = forms.ImageField(
+         widget=forms.FileInput(
+              attrs={
+                   'accept': 'image/*'
+              }
+         )
+    )
+
     # não sabe o que vai receber
     # outra forma de mudar type dos inputs 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
 
         # self.fields['first_name'].widget.attrs.update({
         #     'class': 'classe-a classe-b',
@@ -55,7 +72,7 @@ class ContactForm(forms.ModelForm):
 
         # cria os campos na view de acordo com o model
         fields = (
-            'first_name', 'last_name', 'phone', 'email', 'description', 'category'
+            'first_name', 'last_name', 'phone', 'email', 'description', 'category', 'picture'
         )
 
         # troca o type do input; passwordInput
