@@ -1,13 +1,48 @@
 from django import forms
+# criar usuarios
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from . import models
 
-# criar usuarios
-from django.contrib.auth.forms import UserCreationForm
-
-
+# class do user admin
 class RegisterForm(UserCreationForm):
-     ...
+        
+        # colocando restrições nos campos
+        first_name = forms.CharField(
+             required=True,
+             min_length=3,
+        )
+
+        last_name = forms.CharField(
+             required=True,
+             min_length=3,
+        )
+
+        email = forms.EmailField(
+             required=True,
+             min_length=3,
+        )
+
+        class Meta:
+          model = User
+          fields = (
+               'first_name', 'last_name', 'email',
+               'username', 'password1', 'password2'
+          )
+
+        # verifica se ja existe um email no banco de dados
+        def clean_email(self):
+            email = self.cleaned_data.get('email')
+            
+            if User.objects.filter(email=email).exists():
+                 self.add_error(
+                      'email',
+                      ValidationError('Já existe este e-mail', code='invalid')
+                 )
+            
+            return email
+     
 
 # class altera os campos do formulario
 class ContactForm(forms.ModelForm):
