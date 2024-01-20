@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
-from contact.forms import RegisterForm
+
+# imorta as classes de contact/form.py
+from contact.forms import RegisterForm, RegisterUpdateForm
 from django.contrib import messages, auth
 from django.contrib.auth.forms import AuthenticationForm
 
+
+# formulário de registro
 def register(request):
     form = RegisterForm()
 
@@ -28,6 +32,7 @@ def register(request):
         }
     )
 
+# renderiza a tela de login
 def login_view(request):
     form = AuthenticationForm(request)
 
@@ -35,13 +40,14 @@ def login_view(request):
         form = AuthenticationForm(request, data=request.POST)
 
         if form.is_valid():
+
             user = form.get_user()
-            # messages.success(request, 'Logado com sucesso')
 
             # faz o login do usuario
             auth.login(request, user)
-        else:
-            messages.error(request, 'Login inválido')
+            messages.success(request, 'Logado com sucesso')
+            return redirect('contact:index')
+        messages.error(request, 'Login inválido')
 
     return render(
         request,
@@ -51,6 +57,40 @@ def login_view(request):
         }
     )
 
+
+# faz logout
 def logout_view(request):
     auth.logout(request)
     return redirect('contact:login')
+
+def user_update(request):
+
+    form = RegisterUpdateForm(instance=request.user)
+
+    if request.method != 'POST':
+        return render(
+            request,
+            'contact/register.html',
+            {
+                'form': form
+            }
+        )
+    
+    form = RegisterUpdateForm(data=request.POST, instance=request.user)
+
+    if not form.is_valid():
+        return render(
+            request,
+            'contact/register.html',
+            {
+                'form': form
+            }
+        )
+
+    return render(
+        request,
+        'contact/register.html',
+        {
+            'form': form
+        }
+    )
