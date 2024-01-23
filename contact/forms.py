@@ -172,6 +172,8 @@ class ContactForm(forms.ModelForm):
         
         return first_name
     
+
+# atualiza o usuario
 class RegisterUpdateForm(forms.ModelForm):
      
     first_name = forms.CharField(
@@ -212,13 +214,26 @@ class RegisterUpdateForm(forms.ModelForm):
                'first_name', 'last_name', 'email', 'username'
           )
 
+    def save(self, commit=True):
+        cleaned_data = self.cleaned_data
+        user = super().save(commit=False)
+
+        password = cleaned_data.get('password1')
+
+        if password:
+            user.set_password(password)
+
+        if commit:
+            user.save()
+
+        return user
+
     def clean(self):
 
-        # pega as senha do formulrio
+        # pega as senha do formulario
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
 
-        
         if password1 or password2:
             if password1 != password2:
                 self.add_error(
