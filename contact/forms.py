@@ -91,7 +91,8 @@ class ContactForm(forms.ModelForm):
               attrs={
                    'accept': 'image/*'
               }
-         )
+         ),
+         required=False
     )
 
     # não sabe o que vai receber
